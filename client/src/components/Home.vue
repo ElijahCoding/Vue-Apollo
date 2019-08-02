@@ -5,7 +5,24 @@
 </template>
 
 <script>
-export default {
-  name: "home"
-};
+    import { gql } from 'apollo-boost';
+
+    export default {
+        name: "home",
+
+        apollo: {
+            getPosts: {
+                query: gql`
+                    query {
+                        getPosts {
+                            _id
+                            title
+                            imageUrl
+                            description
+                        }
+                    }
+                `
+            }
+        }
+    };
 </script>
