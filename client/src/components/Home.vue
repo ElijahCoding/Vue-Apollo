@@ -19,6 +19,12 @@
     export default {
         name: "home",
 
+        data () {
+            return {
+
+            }
+        },
+
         apollo: {
             getPosts: {
                 query: gql`
@@ -31,7 +37,18 @@
                             likes
                         }
                     }
-                `
+                `,
+                // args
+                result({ data, loading, networkStatus }) {
+                    if (!loading) {
+                        this.posts = data.getPosts;
+                        console.log(networkStatus);
+                    }
+                },
+
+                error(e) {
+                    console.error(e);
+                }
             }
         }
     };
