@@ -1,16 +1,21 @@
 <template>
-  <v-container>
-    <h1>Home</h1>
-    <div v-if="$apollo.loading">
-        Loading....
-    </div>
-    <ul v-else v-for="post in getPosts" :key="post._id">
-      <li>
-        {{post.title}} {{post.imageUrl}} {{post.description}}
-      </li>
-      <li>{{post.likes}}</li>
-    </ul>
-  </v-container>
+    <v-container>
+        <h1>Home</h1>
+
+        <ApolloQuery :query="getPostsQuery">
+            <template slot-scope="{ result: { loading, error, data, networkStatus } }">
+                <div v-if="loading">Loading...</div>
+                <div v-else-if="error">Error!</div>
+                <div v-else-if="!loading">Network status: {{ networkStatus }}</div>
+                <ul v-else v-for="post in data.getPosts" :key="post._id">
+                    <li>
+                        {{ post.title }}
+                        {{ post.description }}
+                    </li>
+                </ul>
+            </template>
+        </ApolloQuery>
+    </v-container>
 </template>
 
 <script>
@@ -21,13 +26,7 @@
 
         data () {
             return {
-
-            }
-        },
-
-        apollo: {
-            getPosts: {
-                query: gql`
+                getPostsQuery: gql`
                     query {
                         getPosts {
                             _id
@@ -37,19 +36,8 @@
                             likes
                         }
                     }
-                `,
-                // args
-                result({ data, loading, networkStatus }) {
-                    if (!loading) {
-                        this.posts = data.getPosts;
-                        console.log(networkStatus);
-                    }
-                },
-
-                error(e) {
-                    console.error(e);
-                }
+                `
             }
-        }
+        },
     };
 </script>
