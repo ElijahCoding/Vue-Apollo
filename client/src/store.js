@@ -8,12 +8,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-      posts: []
+      posts: [],
+      loading: false
   },
 
   mutations: {
       setPosts: (state, payload) => {
           state.posts = payload;
+      },
+
+      setLoading: (state, payload) => {
+          state.loading = payload;
       }
   },
 
@@ -31,11 +36,16 @@ export default new Vuex.Store({
               `
           }).then(({ data }) => {
               commit('setPosts', data.getPosts);
-          }).catch(e => console.error(e));
+              commit('setLoading', false);
+          }).catch((e) => {
+              commit('setLoading', true);
+              console.error(e);
+          });
       }
   },
 
   getters: {
-      posts: state => state.posts
+      posts: state => state.posts,
+      loading: state => state.loading
   }
 })
