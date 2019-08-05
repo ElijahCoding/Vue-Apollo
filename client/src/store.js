@@ -8,11 +8,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-
+      posts: []
   },
+
   mutations: {
-
+      setPosts: (state, payload) => {
+          state.posts = payload;
+      }
   },
+
   actions: {
       getPosts: ({ commit }) => {
           apolloClient.query({
@@ -25,9 +29,13 @@ export default new Vuex.Store({
                     }
                 }
               `
-          }).then(data => {
-              console.log(data);
+          }).then(({ data }) => {
+              commit('setPosts', data.getPosts);
           }).catch(e => console.error(e));
       }
+  },
+
+  getters: {
+      posts: state => state.posts
   }
 })
