@@ -58,7 +58,10 @@
 
         methods: {
             handleSigninUser () {
-
+                this.$store.dispatch('signinUser', {
+                    username: this.username,
+                    password: this.password
+                });
             }
         }
     };
