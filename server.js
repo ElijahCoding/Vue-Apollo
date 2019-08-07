@@ -2,6 +2,7 @@ const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
+const jwt = require('jsonwebtoken');
 
 const filePath = path.join(__dirname, "typeDefs.gql");
 const typeDefs = fs.readFileSync(filePath, "utf-8");
@@ -18,13 +19,22 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
         .then(() => console.log('DB connected'))
         .catch(e => console.log(e));
 
+const getUser = (token) => {
+    if (token) {
+        try {
+
+        } catch (e) {
+
+        }
+    }
+};
 
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: {
-        User,
-        Post
+    context: async ({ req }) => {
+        const token = req.headers["authorization"];
+         return { User, Post, currentUser: await getUser(token) };
     }
 });
 
