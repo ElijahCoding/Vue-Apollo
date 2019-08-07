@@ -1,4 +1,4 @@
-const { ApolloServer } = require('apollo-server');
+const { ApolloServer, AuthenticationError } = require('apollo-server');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
@@ -19,12 +19,14 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
         .then(() => console.log('DB connected'))
         .catch(e => console.log(e));
 
-const getUser = (token) => {
+const getUser = async (token) => {
     if (token) {
         try {
-
+            return await jwt.verify(token, process.env.SECRET);
         } catch (e) {
-
+            throw new AuthenticationError(
+                "Your session has ended. Please sign in again."
+            );
         }
     }
 };
